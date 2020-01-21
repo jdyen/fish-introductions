@@ -27,7 +27,7 @@ mod <- fit_scalar_model(richness ~ elevation + water_temp + water_depth + water_
                           pa_exo + pa_nattras +
                           abun_exo + abun_nattras +
                           rich_exo + rich_nattras +
-                          (1 | basin),
+                          (1 | basin) + (1 | year),
                         data = data_set,
                         hmc_settings = list(n_samples = n_samples,
                                             warmup = warmup,
@@ -47,7 +47,7 @@ mod <- fit_scalar_model(abundance ~ elevation + water_temp + water_depth + water
                           pa_exo + pa_nattras +
                           abun_exo + abun_nattras +
                           rich_exo + rich_nattras +
-                          (1 | basin),
+                          (1 | basin) + (1 | year),
                         data = data_set,
                         hmc_settings = list(n_samples = n_samples,
                                             warmup = warmup,
@@ -65,7 +65,7 @@ r2cv$abundance_pa <- mod_cv$r2
 mod <- fit_scalar_model(richness ~ elevation + water_temp + water_depth + water_vel + water_conduct +
                           ph + nutrients + deadwood + rba +
                           wtl_exo + pa_exo + abun_exo + rich_exo +
-                          (1 | basin),
+                          (1 | basin) + (1 | year),
                         data = data_exo_tl,
                         hmc_settings = list(n_samples = n_samples,
                                             warmup = warmup,
@@ -83,7 +83,7 @@ r2cv$richness_wtl_ex <- mod_cv$r2
 mod <- fit_scalar_model(abundance ~ elevation + water_temp + water_depth + water_vel + water_conduct +
                           ph + nutrients + deadwood + rba +
                           wtl_exo + pa_exo + abun_exo + rich_exo +
-                          (1 | basin),
+                          (1 | basin) + (1 | year),
                         data = data_exo_tl,
                         hmc_settings = list(n_samples = n_samples,
                                             warmup = warmup,
@@ -101,7 +101,7 @@ r2cv$abundance_wtl_ex <- mod_cv$r2
 mod <- fit_scalar_model(richness ~ elevation + water_temp + water_depth + water_vel + water_conduct +
                           ph + nutrients + deadwood + rba +
                           wtl_nattras + pa_nattras + abun_nattras + rich_nattras +
-                          (1 | basin),
+                          (1 | basin) + (1 | year),
                         data = data_nattras_tl,
                         hmc_settings = list(n_samples = n_samples,
                                             warmup = warmup,
@@ -119,7 +119,7 @@ r2cv$richness_wtl_transloc <- mod_cv$r2
 mod <- fit_scalar_model(abundance ~ elevation + water_temp + water_depth + water_vel + water_conduct +
                           ph + nutrients + deadwood + rba +
                           wtl_nattras + pa_nattras + abun_nattras + rich_nattras +
-                          (1 | basin),
+                          (1 | basin) + (1 | year),
                         data = data_nattras_tl,
                         hmc_settings = list(n_samples = n_samples,
                                             warmup = warmup,
