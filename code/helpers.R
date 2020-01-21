@@ -136,7 +136,7 @@ fit_scalar_model <- function(formula,
   fda_tmp <- fda_response(formula_tmp, data = data)
   x <- as.matrix(fda_tmp$data$x)
   x <- cbind(rep(1, nrow(x)), x)
-  z <- fda_tmp$data$z
+  z <- as.matrix(fda_tmp$data$z)
 
   # unpack hmc settings
   hmc_set <- list(n_samples = 1000,
@@ -150,9 +150,13 @@ fit_scalar_model <- function(formula,
   
   beta <- normal(0, prior_set$beta_sd, dim = ncol(x))
   if (!is.null(z)) {
-    sigma_gamma <- normal(0, prior_set$sigma_sd, truncation = c(0, Inf))
-    gamma <- normal(0, sigma_gamma, dim = max(z))
-    mu <- x %*% beta + gamma[z]
+    nz <- ncol(z)
+    sigma_gamma <- normal(0, prior_set$sigma_sd, dim = nz, truncation = c(0, Inf))
+    gamma <- vector("list", length = nz)
+    for (i in seq_len(nz)) {
+      gamma[[i]] <- normal(0, sigma_gamma[i], dim = max(z[, i]))
+      mu <- x %*% beta + gamma[[i]][z[, i]]
+    }
   } else {
     mu <- x %*% beta
   }
@@ -228,34 +232,106 @@ prepare_cv_data <- function(idx, data) {
   
   # pull out data without fold i
   if (!is.null(dim(data$elevation))) {
-  data <- list(isd = data$isd[idx, ],
-               richness = data$richness[idx],
-               abundance = data$abundance[idx],
-               site = data$site[idx],
-               basin = data$basin[idx],
-               year = data$year[idx],
-               stream_order = data$stream_order[idx],
-               elevation = data$elevation[idx, ],
-               water_temp = data$water_temp[idx, ],
-               water_depth = data$water_depth[idx, ],
-               water_vel = data$water_vel[idx, ],
-               water_conduct = data$water_conduct[idx, ],
-               ph = data$ph[idx, ],
-               nutrients = data$nutrients[idx, ],
-               riparian = data$riparian[idx, ],
-               deadwood = data$deadwood[idx, ],
-               native_riparian = data$native_riparian[idx, ],
-               natural_hydrol = data$natural_hydrol[idx, ],
-               habitat_diversity = data$habitat_diversity[idx, ],
-               macrophyte_cover = data$macrophyte_cover[idx, ],
-               wtl_exo = data$wtl_exo[idx, ],
-               wtl_nattras = data$wtl_nattras[idx, ],
-               pa_exo = data$pa_exo[idx, ],
-               pa_nattras = data$pa_nattras[idx, ],
-               abun_exo = data$abun_exo[idx, ],
-               abun_nattras = data$abun_nattras[idx, ],
-               rich_exo = data$rich_exo[idx, ],
-               rich_nattras = data$rich_nattras[idx, ])
+  data <- list(isd = data$isd[-idx, ],
+               richness = data$richness[-idx],
+               abundance = data$abundance[-idx],
+               site = data$site[-idx],
+               basin = data$basin[-idx],
+               year = data$year[-idx],
+               stream_order = data$stream_order[-idx],
+               elevation = data$elevation[-idx, ],
+               water_temp = data$water_temp[-idx, ],
+               water_depth = data$water_depth[-idx, ],
+               water_vel = data$water_vel[-idx, ],
+               water_conduct = data$water_conduct[-idx, ],
+               ph = data$ph[-idx, ],
+               nutrients = data$nutrients[-idx, ],
+               rba = data$rba[-idx, ],
+               riparian = data$riparian[-idx, ],
+               deadwood = data$deadwood[-idx, ],
+               native_riparian = data$native_riparian[-idx, ],
+               natural_hydrol = data$natural_hydrol[-idx, ],
+               habitat_diversity = data$habitat_diversity[-idx, ],
+               macrophyte_cover = data$macrophyte_cover[-idx, ],
+               wtl_exo = data$wtl_exo[-idx, ],
+               wtl_nattras = data$wtl_nattras[-idx, ],
+               pa_exo = data$pa_exo[-idx, ],
+               pa_nattras = data$pa_nattras[-idx, ],
+               abun_exo = data$abun_exo[-idx, ],
+               abun_nattras = data$abun_nattras[-idx, ],
+               rich_exo = data$rich_exo[-idx, ],
+               rich_nattras = data$rich_nattras[-idx, ])
+  } else {
+    data <- list(isd = data$isd[-idx, ],
+                 richness = data$richness[-idx],
+                 abundance = data$abundance[-idx],
+                 site = data$site[-idx],
+                 basin = data$basin[-idx],
+                 year = data$year[-idx], 
+                 stream_order = data$stream_order[-idx],
+                 elevation = data$elevation[-idx],
+                 water_temp = data$water_temp[-idx],
+                 water_depth = data$water_depth[-idx],
+                 water_vel = data$water_vel[-idx],
+                 water_conduct = data$water_conduct[-idx],
+                 ph = data$ph[-idx],
+                 nutrients = data$nutrients[-idx],
+                 rba = data$rba[-idx],
+                 riparian = data$riparian[-idx],
+                 deadwood = data$deadwood[-idx],
+                 native_riparian = data$native_riparian[-idx],
+                 natural_hydrol = data$natural_hydrol[-idx],
+                 habitat_diversity = data$habitat_diversity[-idx],
+                 macrophyte_cover = data$macrophyte_cover[-idx],
+                 wtl_exo = data$wtl_exo[-idx],
+                 wtl_nattras = data$wtl_nattras[-idx],
+                 pa_exo = data$pa_exo[-idx],
+                 pa_nattras = data$pa_nattras[-idx],
+                 abun_exo = data$abun_exo[-idx],
+                 abun_nattras = data$abun_nattras[-idx],
+                 rich_exo = data$rich_exo[-idx],
+                 rich_nattras = data$rich_nattras[-idx])
+  }
+  
+  # return outputs
+  data
+  
+}
+
+# create a list of data with the holdout folds in each element
+prepare_cv_newdata <- function(idx, data) {
+  
+  # pull out data without fold i
+  if (!is.null(dim(data$elevation))) {
+    data <- list(isd = data$isd[idx, ],
+                 richness = data$richness[idx],
+                 abundance = data$abundance[idx],
+                 site = data$site[idx],
+                 basin = data$basin[idx],
+                 year = data$year[idx],
+                 stream_order = data$stream_order[idx],
+                 elevation = data$elevation[idx, ],
+                 water_temp = data$water_temp[idx, ],
+                 water_depth = data$water_depth[idx, ],
+                 water_vel = data$water_vel[idx, ],
+                 water_conduct = data$water_conduct[idx, ],
+                 ph = data$ph[idx, ],
+                 nutrients = data$nutrients[idx, ],
+                 rba = data$rba[idx, ],
+                 riparian = data$riparian[idx, ],
+                 deadwood = data$deadwood[idx, ],
+                 native_riparian = data$native_riparian[idx, ],
+                 natural_hydrol = data$natural_hydrol[idx, ],
+                 habitat_diversity = data$habitat_diversity[idx, ],
+                 macrophyte_cover = data$macrophyte_cover[idx, ],
+                 wtl_exo = data$wtl_exo[idx, ],
+                 wtl_nattras = data$wtl_nattras[idx, ],
+                 pa_exo = data$pa_exo[idx, ],
+                 pa_nattras = data$pa_nattras[idx, ],
+                 abun_exo = data$abun_exo[idx, ],
+                 abun_nattras = data$abun_nattras[idx, ],
+                 rich_exo = data$rich_exo[idx, ],
+                 rich_nattras = data$rich_nattras[idx, ])
   } else {
     data <- list(isd = data$isd[idx, ],
                  richness = data$richness[idx],
@@ -271,6 +347,7 @@ prepare_cv_data <- function(idx, data) {
                  water_conduct = data$water_conduct[idx],
                  ph = data$ph[idx],
                  nutrients = data$nutrients[idx],
+                 rba = data$rba[idx],
                  riparian = data$riparian[idx],
                  deadwood = data$deadwood[idx],
                  native_riparian = data$native_riparian[idx],
@@ -378,7 +455,7 @@ validate <- function(object, n_cv = 10, data) {
   data_list <- lapply(cv_list, prepare_cv_data, data)
   
   # prepare a list of newdata for predictions
-  newdata_list <- lapply(cv_list, prepare_cv_data, data)
+  newdata_list <- lapply(cv_list, prepare_cv_newdata, data)
   
   # fit the model n_cv times  
   mod_cv <- lapply(seq_len(n_cv), cv_inner,
