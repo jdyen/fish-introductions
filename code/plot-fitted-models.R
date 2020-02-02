@@ -27,16 +27,16 @@ breaks <- exp(seq(log(min(fish_native$W_g, na.rm = TRUE)),
 get(plot_type)(file = paste0("outputs/plots/Fig1.", file_type), width = width_set, height = height_set, units = unit_set, res = res_set)
 par(mfrow = c(3, 2), mar = c(4.9, 4.1, 3.1, 0.8))
 beta_vals <- mod_scalar$beta
-idx_sub <- list(11:16, 11:16, 11:14, 11:14, 11:14, 11:14)
+idx_sub <- list(11:14, 11:14, 11:13, 11:13, 11:13, 11:13)
 main_labels <- c("Species richness (all species)", "Abundance (all species)",
                  "Species richness (exotic species)", "Abundance (exotic species)",
                  "Species richness (translocated species)", "Abundance (translocated species)")
-label_set <- list(c("Exotic", "Transl.", "Exotic", "Transl.", "Exotic", "Transl."),
-                  c("Exotic", "Transl.", "Exotic", "Transl.", "Exotic", "Transl."),
-                  c("Trophic level", "Presence", "Abundance", "Richness"),
-                  c("Trophic level", "Presence", "Abundance", "Richness"),
-                  c("Trophic level", "Presence", "Abundance", "Richness"),
-                  c("Trophic level", "Presence", "Abundance", "Richness"))
+label_set <- list(c("Exotic", "Transl.", "Exotic", "Transl."),
+                  c("Exotic", "Transl.", "Exotic", "Transl."),
+                  c("Trophic level", "Presence", "Abundance"),
+                  c("Trophic level", "Presence", "Abundance"),
+                  c("Trophic level", "Presence", "Abundance"),
+                  c("Trophic level", "Presence", "Abundance"))
 for (i in seq_along(beta_vals)) {
   
   plot_vals <- beta_vals[[i]][idx_sub[[i]], ]
@@ -83,12 +83,11 @@ height_set <- 7
 # plot the estimated functional effects from the full model
 #   -subset to exotic and translocated species predictors first
 get(plot_type)(file = paste0("outputs/plots/Fig3.", file_type), width = width_set, height = height_set, units = unit_set, res = res_set)
-par(mfrow = c(3, 2), mar = c(4.9, 4.1, 3.1, 0.8))
+par(mfrow = c(2, 2), mar = c(4.9, 4.1, 3.1, 0.8))
 beta_vals <- mod_functional$beta$full
-idx_sub <- 11:16
+idx_sub <- 11:14
 main_labels <- c("Presence of exotic species", "Presence of translocated species",
-                 "Abundance of exotic species", "Abundance of translocated species",
-                 "Richness of exotic species", "Richness of translocated species")
+                 "Abundance of exotic species", "Abundance of translocated species")
 for (i in seq_along(beta_vals[idx_sub])) {
   
   # pull out mid, lower, and upper lines to plot
@@ -118,14 +117,14 @@ dev.off()
 
 # plot the estimated functional effects from the exotic species model
 #   -subset to exotic species predictors first
+width_set <- 5 # change dimensions again
 get(plot_type)(file = paste0("outputs/plots/Fig4.", file_type), width = width_set, height = height_set, units = unit_set, res = res_set)
-par(mfrow = c(2, 2), mar = c(4.9, 4.1, 3.1, 0.8))
+par(mfrow = c(3, 1), mar = c(4.9, 4.1, 3.1, 0.8))
 beta_vals <- mod_functional$beta$exotic
-idx_sub <- 11:14
+idx_sub <- 11:13
 main_labels <- c("Weighted trophic level of exotic species",
                  "Presence of exotic species",
-                 "Abundance of exotic species",
-                 "Richness of exotic species")
+                 "Abundance of exotic species")
 for (i in seq_along(beta_vals[idx_sub])) {
   
   # pull out mid, lower, and upper lines to plot
@@ -156,13 +155,12 @@ dev.off()
 # plot the estimated functional effects from the translocated species model
 #   -subset to translocated species predictors first
 get(plot_type)(file = paste0("outputs/plots/Fig5.", file_type), width = width_set, height = height_set, units = unit_set, res = res_set)
-par(mfrow = c(2, 2), mar = c(4.9, 4.1, 3.1, 0.8))
+par(mfrow = c(3, 1), mar = c(4.9, 4.1, 3.1, 0.8))
 beta_vals <- mod_functional$beta$translocated
-idx_sub <- 11:14
+idx_sub <- 11:13
 main_labels <- c("Weighted trophic level of translocated species",
                  "Presence of translocated species",
-                 "Abundance of translocated species",
-                 "Richness of translocated species")
+                 "Abundance of translocated species")
 for (i in seq_along(beta_vals[idx_sub])) {
   
   # pull out mid, lower, and upper lines to plot
@@ -192,6 +190,7 @@ dev.off()
 
 # plot the estimated functional effects from the full model
 #   -subset to remaining predictors
+width_set <- 7
 get(plot_type)(file = paste0("outputs/plots/Fig6.", file_type), width = width_set, height = height_set, units = unit_set, res = res_set)
 par(mfrow = c(3, 3), mar = c(4.9, 4.1, 3.1, 0.8))
 beta_vals <- mod_functional$beta$full

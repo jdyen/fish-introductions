@@ -25,7 +25,7 @@ beta_estimates <- list()
 # fit a full model
 mod_full <- fit_functional_model(isd ~ elevation + water_temp + water_depth + water_vel + water_conduct +
                                    ph + nutrients + deadwood + rba +
-                                   pa_exo + pa_nattras + abun_exo + abun_nattras + rich_exo + rich_nattras +
+                                   pa_exo + pa_nattras + abun_exo + abun_nattras +
                                    (1 | basin) + (1 | year),
                                  data = data_set,
                                  hmc_settings = list(n_samples = n_samples,
@@ -45,7 +45,7 @@ r2cv$full <- mod_full_cv$r2
 # fit a model with exotic species trophic levels (restricted to sites with observed exotic species)
 mod_exotic <- fit_functional_model(isd ~ elevation + water_temp + water_depth + water_vel + water_conduct +
                                      ph + nutrients + deadwood + rba +
-                                     wtl_exo + pa_exo + abun_exo + rich_exo +
+                                     wtl_exo + pa_exo + abun_exo +
                                      (1 | basin) + (1 | year),
                                    data = data_exo_tl,
                                    hmc_settings = list(n_samples = n_samples,
@@ -65,7 +65,7 @@ r2cv$exotic <- mod_exotic_cv$r2
 # fit a model with translocated species trophic levels (restricted to sites with observed translocated species)
 mod_transloc <- fit_functional_model(isd ~ elevation + water_temp + water_depth + water_vel + water_conduct +
                                        ph + nutrients + deadwood + rba +
-                                       wtl_nattras + pa_nattras + abun_nattras + rich_nattras +
+                                       wtl_nattras + pa_nattras + abun_nattras +
                                        (1 | basin) + (1 | year),
                                      data = data_nattras_tl,
                                      hmc_settings = list(n_samples = n_samples,
