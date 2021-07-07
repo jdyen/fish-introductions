@@ -180,8 +180,10 @@ fit_scalar_model <- function(formula,
   # work out variable names for fixed effects
   all_var_names <- attributes(terms(formula))$term.labels
   fixed <- grep("\\|", all_var_names, invert = TRUE)
+  if (length(fixed) == 0)
+    beta_estimates <- matrix(beta_estimates, nrow = 1)
   rownames(beta_estimates) <- c("intercept", all_var_names[fixed])
-  
+
   # collate data to return
   if (!is.null(z)) {
     data_out <- list(y = y, x = x, z = as.matrix(z))

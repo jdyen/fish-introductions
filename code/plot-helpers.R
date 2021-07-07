@@ -1,8 +1,8 @@
 # barplot funtion
-barplot_mod <- function(x, var_names, var_names_lower = NULL, ...) {
+barplot_mod <- function(x, var_names, var_names_lower = NULL, xlab = "Predictor variable", ...) {
   
   nplot <- nrow(x)
-  ylims <- range(x)
+  ylims <- range(c(x, 0))
   xlims <- c(0.5, nplot + 0.5)
   plot(x[, 3] ~ seq_len(nplot),
        type = "n", bty = "l", xaxt = "n", yaxt = "n",
@@ -16,13 +16,13 @@ barplot_mod <- function(x, var_names, var_names_lower = NULL, ...) {
   if (!is.null(var_names_lower)) {
     var_line <- 3.5 
     for (i in seq_along(var_names_lower))
-      mtext(var_names_lower[i], side = 1, at = (2 * i - 0.5), line = 2.15, cex = 0.7)
+      mtext(var_names_lower[i], side = 1, at = (2 * i - 0.5), line = 2.15, cex = 1.0)
   }
-  mtext("Variables", side = 1, adj = 0.5, line = var_line)
+  mtext(xlab, side = 1, adj = 0.5, line = var_line, cex = 1.0)
   mtext("Estimate", side = 2, adj = 0.5, line = 2.75)
   points(x[, 3] ~ seq_len(nplot), pch = 16)
   lines(c(0, nplot + 1), c(0, 0), lty = 2, lwd = 2)
-  axis(1, at = seq_len(nplot), labels = var_names, tick = TRUE, cex.axis = ifelse(length(var_names) > 6, 0.75, 1), ...)
+  axis(1, at = seq_len(nplot), labels = var_names, tick = TRUE, cex.axis = ifelse(length(var_names) > 6, 0.75, 1), cex = 0.9, ...)
   axis(2, las = 1)
   
 }
