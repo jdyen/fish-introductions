@@ -20,6 +20,17 @@ r2 <- list()
 r2cv <- list()
 beta_estimates <- list()
 
+# calculate VIFs for all predictors
+mod_vif <- lme4::lmer(
+  richness ~ elevation + water_temp + water_depth + water_vel + water_conduct +
+    ph + nutrients + deadwood + rba +
+    pa_exo + pa_nattras + abun_exo + abun_nattras +
+    (1 | basin) + (1 | year),
+  data = data_set
+)
+vif_est <- car::vif(mod_vif)
+write.csv(vif_est, file = "outputs/vif-calc.csv")
+
 # fit a full model
 mod_full <- fit_functional_model(isd ~ elevation + water_temp + water_depth + water_vel + water_conduct +
                                    ph + nutrients + deadwood + rba +
