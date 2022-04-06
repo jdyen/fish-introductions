@@ -3,6 +3,11 @@ fish_sizes <- read.csv("data/bd-fish-size.csv", stringsAsFactors = FALSE)
 predictors <- read.csv("data/bd-predictors.csv", stringsAsFactors = FALSE)
 rba <- read.csv("data/bd-rba.csv", stringsAsFactors = FALSE)
 
+# check for stupid windows formatting on column names
+colnames(fish_sizes) <- gsub("ï..", "", colnames(fish_sizes))
+colnames(predictors) <- gsub("ï..", "", colnames(predictors))
+colnames(rba) <- gsub("ï..", "", colnames(rba))
+
 # add rba values to predictors
 predictors$rba <- rba$RBA[match(predictors$Code1, rba$CODE1)]
 

@@ -72,9 +72,6 @@ for (i in seq_along(beta_vals)) {
 }
 dev.off()
 
-# plot intercepts and/or estimated size distributions at multiple levels of predictors
-#### TO ADD
-
 # change plot dimensions for functional plots
 width_set <- 7.2
 height_set <- 7
